@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="teacher-dashboard">
+    <h2>Панель преподавателя</h2>
+    
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Ожидают рассмотрения</h3>
+            <p>{{ pending_requests }}</p>
+            <a href="{% url 'request_list' %}">Просмотреть</a>
+        </div>
+        
+        <div class="stat-card">
+            <h3>Активные мероприятия</h3>
+            <p>{{ active_events }}</p>
+            <a href="{% url 'event_create' %}">Создать новое</a>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <a href="{% url 'team_create' %}" class="btn">Создать команду</a>
+        <a href="{% url 'event_list' %}" class="btn">Все мероприятия</a>
+    </div>
+</div>
+{% endblock %}

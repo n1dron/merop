@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="teacher-tools">
+    <!-- Быстрый доступ -->
+    <div class="quick-actions">
+        <a href="{% url 'event_create' %}" class="btn">+ Мероприятие</a>
+        <a href="{% url 'team_create' %}" class="btn">+ Команда</a>
+    </div>
+
+    <!-- Статистика -->
+    <div class="stats">
+        <div class="stat-card">
+            <h3>Предстоящие мероприятия</h3>
+            <p>{{ upcoming_events.count }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Заявки на рассмотрении</h3>
+            <p>{{ pending_requests.count }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

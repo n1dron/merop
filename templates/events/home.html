@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Добро пожаловать в SportEvents!</h1>
+{% if user.is_authenticated %}
+    <p>Привет, {{ user.username }}!</p>
+{% else %}
+    <p>Войдите или зарегистрируйтесь.</p>
+{% endif %}
+{% endblock %}

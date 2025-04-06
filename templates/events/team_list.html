@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Команды</h1>
+
+<ul>
+    {% for team in teams %}
+    <li>
+        {{ team.name }} ({{ team.sport_type }})
+        {% if user.is_authenticated and user.is_student %}
+            <a href="{% url 'join_team' team.pk %}">Подать заявку</a>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

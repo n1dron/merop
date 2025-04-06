@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Личный кабинет</h1>
+
+<h2>Ваши заявки</h2>
+<ul>
+    {% for req in user_requests %}
+    <li>
+        {{ req.team }} - {{ req.get_status_display }}
+    </li>
+    {% empty %}
+    <li>У вас нет активных заявок</li>
+    {% endfor %}
+</ul>
+
+<h2>Ваши команды</h2>
+<ul>
+    {% for team in user_teams %}
+    <li>{{ team.name }} ({{ team.sport_type }})</li>
+    {% empty %}
+    <li>Вы не состоите в командах</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Мероприятия</h1>
+
+<!-- Форма фильтрации -->
+<form method="get">
+    {{ form.as_p }}
+    <button type="submit">Фильтровать</button>
+</form>
+
+<!-- Список мероприятий -->
+<ul>
+    {% for event in events %}
+    <li>
+        <a href="{% url 'event_detail' event.pk %}">{{ event.title }}</a>
+        ({{ event.sport_type }}, {{ event.date|date:"d.m.Y" }})
+    </li>
+    {% empty %}
+    <li>Мероприятий не найдено</li>
+    {% endfor %}
+</ul>
+{% endblock %}

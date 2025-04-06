@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Заявки на вступление</h1>
+
+<ul>
+    {% for req in requests %}
+    <li>
+        {{ req.user }} хочет вступить в {{ req.team }}
+        <a href="{% url 'process_request' req.pk %}">Рассмотреть</a>
+    </li>
+    {% empty %}
+    <li>Нет заявок на рассмотрении</li>
+    {% endfor %}
+</ul>
+{% endblock %}
