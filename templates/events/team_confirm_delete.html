@@ -1,10 +1,27 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block content %}
-<h1>Удаление команды</h1>
-<p>Вы уверены, что хотите удалить "{{ object }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Удалить</button>
-</form>
+<div class="container mt-4">
+    <h2>{{ title }}</h2>
+    
+    <div class="alert alert-danger">
+        <h4>{% trans "Вы уверены, что хотите удалить эту команду?" %}</h4>
+        <p>
+            <strong>{% trans "Название" %}:</strong> {{ object.name }}<br>
+            <strong>{% trans "Вид спорта" %}:</strong> {{ object.sport_type }}<br>
+            <strong>{% trans "Участников" %}:</strong> {{ member_count }}
+        </p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash-alt"></i> {% trans "Да, удалить" %}
+        </button>
+        <a href="{% url 'team_list' %}" class="btn btn-secondary">
+            <i class="fas fa-times"></i> {% trans "Отмена" %}
+        </a>
+    </form>
+</div>
 {% endblock %}

@@ -1,16 +1,84 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
 
 {% block content %}
-<h1>Команды</h1>
-
-<ul>
-    {% for team in teams %}
-    <li>
-        {{ team.name }} ({{ team.sport_type }})
-        {% if user.is_authenticated and user.is_student %}
-            <a href="{% url 'join_team' team.pk %}">Подать заявку</a>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Команды</h1>
+        {% if user.is_authenticated and user.is_teacher %}
+        <a href="{% url 'team_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Создать команду
+        </a>
         {% endif %}
-    </li>
-    {% endfor %}
-</ul>
+    </div>
+
+    <div class="row">
+        {% for team in teams %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 team-card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <a href="{% url 'team_detail' team.pk %}" class="text-white text-decoration-none">
+                            {{ team.name }}
+                        </a>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <span class="badge bg-secondary me-2">{{ team.sport_type }}</span>
+                        <small class="text-muted">
+                            {{ team.members.count }}/{{ team.required_players }} участников
+                        </small>
+                    </div>
+                    
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{% if team.captain.profile.avatar %}{{ team.captain.profile.avatar.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
+                             class="rounded-circle me-2" width="32" height="32" alt="Капитан">
+                        <small>Капитан: {{ team.captain.get_full_name }}</small>
+                    </div>
+                    
+                    {% if team.members.count < team.required_players %}
+                    <div class="alert alert-warning py-2 mb-3">
+                        <small>
+                            <i class="fas fa-info-circle me-1"></i>
+                            Нужно ещё {{ team.required_players|sub:team.members.count }} игрока
+                        </small>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-transparent">
+                    {% if user.is_authenticated and user.is_student %}
+                    <a href="{% url 'join_team' team.pk %}" class="btn btn-sm btn-outline-primary">
+                        Подать заявку
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'team_detail' team.pk %}" class="btn btn-sm btn-outline-secondary float-end">
+                        Подробнее
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                Пока нет ни одной команды.
+                {% if user.is_authenticated and user.is_teacher %}
+                <a href="{% url 'team_create' %}" class="alert-link">Создайте первую команду</a>.
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .team-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .team-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+</style>
 {% endblock %}

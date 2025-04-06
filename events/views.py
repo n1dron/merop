@@ -119,6 +119,20 @@ class TeamDeleteView(TeacherRequiredMixin, DeleteView):
     model = Team
     template_name = 'events/team_confirm_delete.html'
     success_url = reverse_lazy('team_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = ("Подтверждение удаления команды")
+        context['member_count'] = self.object.members.count()
+        return context
+    
+    def delete(self, request, *args, **kwargs):
+        team = self.get_object()
+        messages.success(
+            request,
+            ('Команда "%(name)s" успешно удалена') % {'name': team.name}
+        )
+        return super().delete(request, *args, **kwargs)
 
 
 class EventUpdateView(TeacherRequiredMixin, UpdateView):
@@ -175,19 +189,27 @@ class TeacherDashboardView(TemplateView):
         return context
     
 class EventCreateView(TeacherRequiredMixin, CreateView):
-
-    model = Event  # Указываем модель, с которой работаем
-    form_class = EventForm  # Используем кастомную форму (или можно указать fields)
-    template_name = 'events/event_form.html'  # Шаблон для отображения формы
-    success_url = reverse_lazy('event_list')  # Куда перенаправить после успешного создания
-
+    form_class = EventForm
+    template_name = 'events/event_form.html'
+    
     def form_valid(self, form):
-
         form.instance.organizer = self.request.user
+        messages.success(self.request, "Мероприятие успешно создано!")
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('event_detail', kwargs={'pk': self.object.pk})
 
+
+class TeamDetailView(DetailView):
+    model = Team
+    template_name = 'events/team_detail.html'
+    context_object_name = 'team'
+    
     def get_context_data(self, **kwargs):
- 
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Создание нового мероприятия'
+        team = self.object
+        context['members'] = team.members.all()
+        context['captain'] = team.captain
+        context['regular_members'] = context['members'].exclude(id=team.captain.id)
         return context

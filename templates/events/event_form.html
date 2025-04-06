@@ -7,17 +7,17 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         
+        {% for field in form %}
         <div class="mb-3">
-            {{ form.title.label_tag }}
-            {{ form.title }}
-            {% if form.title.errors %}
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.errors %}
                 <div class="invalid-feedback d-block">
-                    {{ form.title.errors }}
+                    {{ field.errors }}
                 </div>
             {% endif %}
         </div>
-        
-        <!-- Аналогично для других полей -->
+        {% endfor %}
         
         <div class="form-group mt-4">
             <button type="submit" class="btn btn-primary">

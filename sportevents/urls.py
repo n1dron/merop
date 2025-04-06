@@ -14,6 +14,7 @@ urlpatterns = [
     path('events/<int:pk>/', event_views.event_detail, name='event_detail'),
     path('teams/', event_views.team_list, name='team_list'),
     path('teams/<int:team_id>/join/', event_views.create_participation_request, name='join_team'),
+    path('teams/<int:pk>/', event_views.TeamDetailView.as_view(), name='team_detail'),
     path('profile/', user_views.profile, name='profile'),
     path('requests/', event_views.ParticipationRequestList.as_view(), name='request_list'),
     path('requests/<int:pk>/', event_views.ProcessRequestView.as_view(), name='process_request'),
