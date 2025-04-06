@@ -1,26 +1,208 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="teacher-dashboard">
-    <h2>Панель преподавателя</h2>
-    
-    <div class="stats">
-        <div class="stat-card">
-            <h3>Ожидают рассмотрения</h3>
-            <p>{{ pending_requests }}</p>
-            <a href="{% url 'request_list' %}">Просмотреть</a>
-        </div>
-        
-        <div class="stat-card">
-            <h3>Активные мероприятия</h3>
-            <p>{{ active_events }}</p>
-            <a href="{% url 'event_create' %}">Создать новое</a>
-        </div>
+  <!-- Заголовок -->
+  <div class="dashboard-header">
+    <h1><i class="fas fa-chalkboard-teacher"></i> Панель преподавателя</h1>
+  </div>
+
+  <!-- Основные карточки -->
+  <div class="dashboard-cards">
+    <!-- Карточка заявок -->
+    <div class="dashboard-card">
+      <div class="card-icon bg-warning">
+        <i class="fas fa-user-clock"></i>
+      </div>
+      <div class="card-content">
+        <h3>Ожидают рассмотрения</h3>
+        <p>{{ pending_requests.count }} заявок</p>
+      </div>
+      <a href="{% url 'request_list' %}" class="btn btn-outline-primary">
+        Просмотреть <i class="fas fa-arrow-right"></i>
+      </a>
     </div>
 
-    <div class="quick-actions">
-        <a href="{% url 'team_create' %}" class="btn">Создать команду</a>
-        <a href="{% url 'event_list' %}" class="btn">Все мероприятия</a>
+    <!-- Карточка мероприятий -->
+    <div class="dashboard-card">
+      <div class="card-icon bg-success">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="card-content">
+        <h3>Активные мероприятия</h3>
+        <p>{{ active_events.count }} событий</p>
+      </div>
+      <a href="{% url 'event_list' %}" class="btn btn-outline-primary">
+        Все мероприятия <i class="fas fa-arrow-right"></i>
+      </a>
     </div>
+  </div>
+
+  <!-- Раздел управления командами -->
+  <div class="team-management-section">
+    <div class="section-header">
+      <h2><i class="fas fa-users-cog"></i> Управление командами</h2>
+      <a href="{% url 'team_create' %}" class="btn btn-primary">
+        <i class="fas fa-plus-circle"></i> Создать команду
+      </a>
+    </div>
+
+    {% if teams %}
+    <div class="team-list">
+      {% for team in teams %}
+      <div class="team-item">
+        <div class="team-info">
+          <h4>{{ team.name }}</h4>
+          <span class="badge bg-secondary">{{ team.sport_type.name }}</span>
+          <small>{{ team.members.count }}/{{ team.required_players }} участников</small>
+        </div>
+        <div class="team-actions">
+          <a href="{% url 'team_update' team.pk %}" class="btn btn-sm btn-outline-secondary" title="Редактировать">
+            <i class="fas fa-edit"></i>
+          </a>
+          <a href="{% url 'team_delete' team.pk %}" class="btn btn-sm btn-outline-danger" title="Удалить">
+            <i class="fas fa-trash-alt"></i>
+          </a>
+          <a href="{% url 'team_detail' team.pk %}" class="btn btn-sm btn-outline-primary" title="Подробнее">
+            <i class="fas fa-eye"></i>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-users-slash fa-3x"></i>
+      <p>У вас пока нет команд</p>
+    </div>
+    {% endif %}
+  </div>
 </div>
+
+<style>
+  /* Основные стили */
+  .teacher-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .dashboard-header h1 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Карточки */
+  .dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .dashboard-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: white;
+    font-size: 1.5rem;
+  }
+
+  .bg-warning {
+    background-color: #ffc107;
+  }
+
+  .bg-success {
+    background-color: #28a745;
+  }
+
+  /* Раздел команд */
+  .team-management-section {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .section-header h2 {
+    margin: 0;
+    color: #2c3e50;
+  }
+
+  .team-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .team-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .team-item:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+  }
+
+  .team-info h4 {
+    margin: 0 0 0.3rem 0;
+    color: #2c3e50;
+  }
+
+  .team-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+  }
+
+  /* Адаптивность */
+  @media (max-width: 768px) {
+    .team-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .team-actions {
+      align-self: flex-end;
+    }
+  }
+</style>
 {% endblock %}

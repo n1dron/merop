@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
+
 User = get_user_model()
 
 class SportType(models.Model):
@@ -86,10 +87,12 @@ class Team(models.Model):
         _("Требуемое количество участников"),
         help_text=_("Минимальное количество игроков в команде")
     )
+    created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
-        verbose_name = _("Команда")
-        verbose_name_plural = _("Команды")
+        ordering = ['-created_at']
+        verbose_name = 'Команда'
+        verbose_name_plural = 'Команды'
     
     def __str__(self):
         return self.name

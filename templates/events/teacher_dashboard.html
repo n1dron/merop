@@ -1,23 +1,43 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="teacher-tools">
-    <!-- Быстрый доступ -->
-    <div class="quick-actions">
-        <a href="{% url 'event_create' %}" class="btn">+ Мероприятие</a>
-        <a href="{% url 'team_create' %}" class="btn">+ Команда</a>
+<div class="teacher-dashboard">
+  <div class="dashboard-header">
+    <h1><i class="fas fa-chalkboard-teacher"></i> Панель преподавателя</h1>
+  </div>
+
+  <div class="dashboard-widgets">
+    <!-- Виджет заявок -->
+    <div class="widget pending-requests">
+      <div class="widget-header">
+        <h3><i class="fas fa-user-clock"></i> Ожидают рассмотрения</h3>
+        <span class="badge">{{ pending_requests.count }}</span>
+      </div>
+      <a href="{% url 'request_list' %}" class="widget-link">
+        Просмотреть <i class="fas fa-arrow-right"></i>
+      </a>
     </div>
 
-    <!-- Статистика -->
-    <div class="stats">
-        <div class="stat-card">
-            <h3>Предстоящие мероприятия</h3>
-            <p>{{ upcoming_events.count }}</p>
-        </div>
-        <div class="stat-card">
-            <h3>Заявки на рассмотрении</h3>
-            <p>{{ pending_requests.count }}</p>
-        </div>
+    <!-- Виджет мероприятий -->
+    <div class="widget active-events">
+      <div class="widget-header">
+        <h3><i class="fas fa-calendar-check"></i> Активные мероприятия</h3>
+        <span class="badge">{{ active_events.count }}</span>
+      </div>
+      <a href="{% url 'event_list' %}" class="widget-link">
+        Все мероприятия <i class="fas fa-arrow-right"></i>
+      </a>
     </div>
+  </div>
+
+  <div class="quick-actions">
+    <a href="{% url 'event_create' %}" class="action-btn">
+      <i class="fas fa-calendar-plus"></i> Создать мероприятие
+    </a>
+    <a href="{% url 'team_create' %}" class="action-btn">
+      <i class="fas fa-users"></i> Создать команду
+    </a>
+  </div>
 </div>
 {% endblock %}

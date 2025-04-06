@@ -77,6 +77,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sportevents.wsgi.application'
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Для collectstatic
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -146,3 +149,5 @@ AUTH_USER_MODEL = 'users.User'
 LANGUAGE_CODE = 'ru-ru'
 USE_I18N = True
 USE_L10N = True
+
+DEBUG = True

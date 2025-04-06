@@ -17,12 +17,22 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>Вид спорта:</strong> {{ team.sport_type }}</p>
-                    <p><strong>Капитан:</strong> {{ team.captain.get_full_name }}</p>
+                    <p><strong>Вид спорта:</strong> {{ team.sport_type.name }}</p>
+                    <p><strong>Капитан:</strong> 
+                        {% if team.captain.get_full_name %}
+                            {{ team.captain.get_full_name }}
+                        {% else %}
+                            {{ team.captain.username }}
+                        {% endif %}
+                    </p>
                 </div>
                 <div class="col-md-6">
-                    <p><strong>Всего участников:</strong> {{ members|length }}</p>
-                    <p><strong>Требуется игроков:</strong> {{ team.required_players }}</p>
+                    <p><strong>Участников:</strong> {{ team.members.count }}/{{ team.required_players }}</p>
+                    {% if spots_left > 0 %}
+                        <p class="text-warning">Нужно ещё {{ spots_left }} игроков</p>
+                    {% else %}
+                        <p class="text-success">Команда укомплектована</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -35,14 +45,18 @@
         <div class="card-body">
             <div class="list-group">
                 <!-- Капитан -->
-                <div class="list-group-item list-group-item-action">
+                <div class="list-group-item list-group-item-action active">
                     <div class="d-flex align-items-center">
-                        <img src="{% if team.captain.profile.avatar %}{{ team.captain.profile.avatar.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
-                             class="rounded-circle me-3" width="50" height="50" alt="{{ team.captain.get_full_name }}">
-                        <div>
-                            <h6 class="mb-1">{{ team.captain.get_full_name }}</h6>
-                            <small class="text-muted">{{ team.captain.email }}</small>
-                            <span class="badge bg-primary ms-2">Капитан</span>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">
+                                {% if team.captain.get_full_name %}
+                                    {{ team.captain.get_full_name }}
+                                {% else %}
+                                    {{ team.captain.username }}
+                                {% endif %}
+                                <span class="badge bg-light text-dark ms-2">Капитан</span>
+                            </h6>
+                            <small>{{ team.captain.email }}</small>
                         </div>
                     </div>
                 </div>
@@ -51,10 +65,14 @@
                 {% for member in regular_members %}
                 <div class="list-group-item list-group-item-action">
                     <div class="d-flex align-items-center">
-                        <img src="{% if member.profile.avatar %}{{ member.profile.avatar.url }}{% else %}{% static 'images/default-avatar.png' %}{% endif %}" 
-                             class="rounded-circle me-3" width="50" height="50" alt="{{ member.get_full_name }}">
-                        <div>
-                            <h6 class="mb-1">{{ member.get_full_name }}</h6>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">
+                                {% if member.get_full_name %}
+                                    {{ member.get_full_name }}
+                                {% else %}
+                                    {{ member.username }}
+                                {% endif %}
+                            </h6>
                             <small class="text-muted">{{ member.email }}</small>
                         </div>
                     </div>
